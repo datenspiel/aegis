@@ -44,11 +44,15 @@ module Aegis
 
       if options[:default]
 
-        unless method_defined?(:after_initialize)
-          send :define_method, :after_initialize do
+        if defined?(Rails)
+          if Rails.version.match(Regexp.new(/^2/))
+            unless method_defined?(:after_initialize)
+              send :define_method, :after_initialize do
+              end
+            end
           end
         end
-
+        
         send :define_method, :set_default_role_name do
           if new_record? && role_name.blank?
             self.role_name = options[:default]
